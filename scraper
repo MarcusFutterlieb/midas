@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep 17 12:13:21 2019
+
+@author: mfutterl
+"""
+from bs4 import BeautifulSoup as bs;
+import requests;
+import os; #to have access to clear
+###
+os.system('cls')
+###
+
+with open('links.txt') as f:
+    content = f.readlines()
+# you may also want to remove whitespace characters like `\n` at the end of each line
+content = [x.strip() for x in content]
+#print(content[0]);
+
+r = requests.get(content[0]).text
+#print (r.text)
+websiteAsText = bs(r,'lxml');
+stockTable = websiteAsText.find('div',class_='abstand new');#use underscore because class is a keyword in python
+
+stockTableName = stockTable.find('div',class_='arheadgl new');#use underscore because class is a keyword in python
+stockTableName = stockTableName.h3.text;
+##todo --> check if the content here is "Historische Kurse"
+
+stockTableTable = stockTable.find('table',class_='line');
+stockTableHeader = stockTableTable.find('tr',class_='subtitle')# you can also write it like this 'tr',{'class': 'subtitle'}
+for td in stockTableHeader.find_all(['td',{'class': 'ql_hist_quote right'},'td',{'class': 'ql_date'}]):
+    StockTableHeaderData = td.text;
+    print(StockTableHeaderData);
+##check if the order of the data is still correct
+print('end++++++++++++++++++++++++header');
+for data in stockTableTable.find_all('tr',{'class': 'arrow0'}):
+    stockTableTableData = data.text;
+    print(stockTableTableData);
+print('end+++++++++++++++++++++++data')
+#this is where all the data should be
+
+#print(stockTableName.prettify());
+#print(stockTableContent.prettify());
+#print(stockTableTable.prettify());
