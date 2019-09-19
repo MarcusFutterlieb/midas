@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep 17 12:13:21 2019
+Created on Tue Sep 17 2019
 
-@author: mfutterl
+@author: Marcus Futterlieb
 """
 from bs4 import BeautifulSoup as bs;
 import requests;
 import os; #to have access to clear
+import time; #for now just to send my code to sleep
 ###
 os.system('cls')
 ###
+
+history = { 'date': [],	'open': [], 'high': [], 'low':[], 'close': [],
+           'tradedUnits':[], 'Volumen':[]};
+
+aStock = {'name': 'tmp', 'lastPrice': 0, 'history': history,
+        'lastDividend': 0, 'dividendDate': 0, 'dividendYield':0, 
+        'historicDividend': 0, 'dividendDate': 0, 'dividendYield':0,
+        'appropriatePrice': 0};
 
 with open('links.txt') as f:
     content = f.readlines()
@@ -20,6 +29,7 @@ content = [x.strip() for x in content]
 r = requests.get(content[0]).text
 #print (r.text)
 websiteAsText = bs(r,'lxml');
+stockName = 'todo';
 stockTable = websiteAsText.find('div',class_='abstand new');#use underscore because class is a keyword in python
 
 stockTableName = stockTable.find('div',class_='arheadgl new');#use underscore because class is a keyword in python
@@ -34,11 +44,22 @@ for td in stockTableHeader.find_all(['td',{'class': 'ql_hist_quote right'},'td',
 ##check if the order of the data is still correct
 print('end++++++++++++++++++++++++header');
 for data in stockTableTable.find_all('tr',{'class': 'arrow0'}):
+    for data2 in data.td:
+        aStock['history']['date'].append(data2);
+    loopCounter=2;
+    for data2 in data.find_all(['td',{'class': 'font-size-14'}]):
+        print(data2.text);
+        print (loopCounter)
+        loopCounter=loopCounter+1;
+
+    
     stockTableTableData = data.text;
     print(stockTableTableData);
+    time.sleep(0.1)
 print('end+++++++++++++++++++++++data')
 #this is where all the data should be
 
 #print(stockTableName.prettify());
 #print(stockTableContent.prettify());
 #print(stockTableTable.prettify());
+
