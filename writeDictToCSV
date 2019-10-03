@@ -9,7 +9,7 @@ import csv
 
 def WriteDictToCSV(csv_file,dict_data):
     
-    csv_header = ['date',	'open', 'high', 'low', 'close',
+    csv_header = ['date',	'open', 'high', 'low', 'close','currency',
                 'tradedUnits', 'volume','date','dividend',
                 'yield','week', 'month', 'threeMonth',
                        'currentYear', 'year', 'threeYears', 'appropriatePrice'];
@@ -24,15 +24,15 @@ def WriteDictToCSV(csv_file,dict_data):
                 
                 
                 if isinstance(dict_data.get(key),dict):
-                    print('found a dict')
+                    #print('found a dict')
                     for innerKey in dict_data[key].keys():
-                        print('key : currently writing inner:  ',innerKey);
-                        print('value : currently writing inner:  ',dict_data[key][innerKey]);
+                        #print('key : currently writing inner:  ',innerKey);
+                        #print('value : currently writing inner:  ',dict_data[key][innerKey]);
 #                        writer.writerow([dict_data[key]]);
                         wr.writerow([innerKey,dict_data[key][innerKey]])
                 else:
-                    print('key : currently writing outer:  ',key);
-                    print('value : currently writing outer:  ',dict_data[key]);
+                    #print('key : currently writing outer:  ',key);
+                    #print('value : currently writing outer:  ',dict_data[key]);
 #                    writer.writerow([key]);
                     wr.writerow([key,dict_data[key]])
 #                    
@@ -40,6 +40,3 @@ def WriteDictToCSV(csv_file,dict_data):
         errno, strerror = err.args
         print("I/O error({0}): {1}".format(errno, strerror))
     return            
-
-
-#WriteDictToCSV(csv_file,csv_columns,dict_data)
