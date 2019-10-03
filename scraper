@@ -5,20 +5,28 @@ Created on Tue Sep 17 2019
 @author: Marcus Futterlieb
 """
 from bs4 import BeautifulSoup as bs;
+from WriteDictToCSV import WriteDictToCSV as wcsv;
 import requests;
 import os; #to have access to clear
 import time; #for now just to send my code to sleep
+import csv;
+import unicodedata; 
 ###
 os.system('cls')
 ###
 
-history = { 'date': [],	'open': [], 'high': [], 'low':[], 'close': [],
-           'tradedUnits':[], 'Volumen':[]};
+historicPrices = { 'date': [],	'open': [], 'high': [], 'low':[], 'close': [],
+                'tradedUnits':[], 'volume':[]};
+historicDividend = {'date': [],'dividend': [], 'yield':[]};
 
-aStock = {'name': 'tmp', 'lastPrice': 0, 'history': history,
-        'lastDividend': 0, 'dividendDate': 0, 'dividendYield':0, 
-        'historicDividend': 0, 'dividendDate': 0, 'dividendYield':0,
-        'appropriatePrice': 0};
+historicPerformance = {'week': 0, 'month': 0, 'threeMonth': 0,
+                       'currentYear': 0, 'year': 0, 'threeYears': 0};
+
+
+aStock = {'name': 'tmp', 'lastPrice': 0, 'lastPriceDate': 0, 'historicPrices': historicPrices,
+        'lastDividend': 0, 'lastDividendDate': 0, 'lastDividendYield':0, 
+        'historicDividend': historicDividend, 'performance': historicPerformance, 'appropriatePrice': 0};
+
 
 with open('links.txt') as f:
     content = f.readlines()
@@ -40,26 +48,52 @@ stockTableTable = stockTable.find('table',class_='line');
 stockTableHeader = stockTableTable.find('tr',class_='subtitle')# you can also write it like this 'tr',{'class': 'subtitle'}
 for td in stockTableHeader.find_all(['td',{'class': 'ql_hist_quote right'},'td',{'class': 'ql_date'}]):
     StockTableHeaderData = td.text;
-    print(StockTableHeaderData);
-##check if the order of the data is still correct
-print('end++++++++++++++++++++++++header');
-for data in stockTableTable.find_all('tr',{'class': 'arrow0'}):
-    for data2 in data.td:
-        aStock['history']['date'].append(data2);
-    loopCounter=2;
-    for data2 in data.find_all(['td',{'class': 'font-size-14'}]):
-        print(data2.text);
-        print (loopCounter)
-        loopCounter=loopCounter+1;
+    #print(StockTableHeaderData);
+##check if the order of the data is still correct = tableheader
+#print('end++++++++++++++++++++++++header');
+loopCounter = 1;
+for dataRows in stockTableTable.find_all(['tr',{'class': 'arrow0'}]):
+    if loopCounter >1:#removing the header to not have it double int the library
+        for data in dataRows.td:
+            aStock['historicPrices']['date'].append(data);
+        loopCounterNested=1;
+        #print(dataRows.find_all(['td',{'class': 'font-size-14'}]))
+        for data in dataRows.find_all(['td',{'class= font-size-14 right'}]):
+            #print(unicodedata.normalize("NFKD", data.contents[0]));
+            #print (loopCounterNested)
+            if (loopCounterNested==2):
+                aStock['historicPrices']['open'].append(data.contents[0]); 
+            elif (loopCounterNested==3):
+                aStock['historicPrices']['high'].append(data.contents[0]);
+            elif (loopCounterNested==4):
+                aStock['historicPrices']['low'].append(unicodedata.normalize("NFKD", data.contents[0]));
+            elif (loopCounterNested==5):
+                aStock['historicPrices']['close'].append(data.contents[0]);
+            elif (loopCounterNested==7):
+                aStock['historicPrices']['tradedUnits'].append(data.contents[0]);
+            elif (loopCounterNested==8):
+                aStock['historicPrices']['volume'].append(unicodedata.normalize("NFKD", data.contents[0]));
+    #        else:
+    #           print('do nothing');
+            #print(loopCounterNested)
+            #print(data2)
+            
+            loopCounterNested=loopCounterNested+1;
+    loopCounter = loopCounter + 1;
 
+
+wcsv('test.csv',aStock);
     
-    stockTableTableData = data.text;
-    print(stockTableTableData);
-    time.sleep(0.1)
-print('end+++++++++++++++++++++++data')
+    #stockTableTableData = data.text;
+    #print(stockTableTableData);
+    #time.sleep(0.1)
+#print('end+++++++++++++++++++++++data')
+
+
+########update database csv file
+##create
 #this is where all the data should be
 
 #print(stockTableName.prettify());
 #print(stockTableContent.prettify());
 #print(stockTableTable.prettify());
-
