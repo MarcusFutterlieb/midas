@@ -6,8 +6,18 @@ Created on Fri 20 Sep 2019
 """
 
 import csv
+import os
 
 def WriteDictToCSV(csv_file,dict_data):
+    
+    #try to create the library archive
+    try:
+        os.mkdir("./library")
+    except OSError as e:
+       print("Directory exists")
+    
+    
+    
     
     csv_header = ['date',	'open', 'high', 'low', 'close','currency',
                 'tradedUnits', 'volume','date','dividend',
@@ -15,7 +25,7 @@ def WriteDictToCSV(csv_file,dict_data):
                        'currentYear', 'year', 'threeYears', 'appropriatePrice'];
     
     try:
-        with open(csv_file, 'w') as csvfile:
+        with open('./library/'+ csv_file, 'w') as csvfile:
             wr = csv.writer(csvfile, dialect='excel')
             #wr.writerow(csv_header)
             #wr.writerow(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
@@ -40,3 +50,6 @@ def WriteDictToCSV(csv_file,dict_data):
         errno, strerror = err.args
         print("I/O error({0}): {1}".format(errno, strerror))
     return            
+
+
+#WriteDictToCSV(csv_file,csv_columns,dict_data)
