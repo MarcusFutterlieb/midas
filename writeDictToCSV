@@ -19,10 +19,10 @@ def WriteDictToCSV(csv_file,dict_data):
     
     
     
-    csv_header = ['date',	'open', 'high', 'low', 'close','currency',
-                'tradedUnits', 'volume','date','dividend',
-                'yield','week', 'month', 'threeMonth',
-                       'currentYear', 'year', 'threeYears', 'appropriatePrice'];
+    #csv_header = ['date',	'open', 'high', 'low', 'close','currency',
+    #            'tradedUnits', 'volume','date','dividend',
+    #            'yield','week', 'month', 'threeMonth',
+    #                   'currentYear', 'year', 'threeYears', 'appropriatePrice'];
     
     try:
         with open('./library/'+ csv_file, 'w') as csvfile:
