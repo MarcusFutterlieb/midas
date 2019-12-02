@@ -23,7 +23,7 @@ historicPerformance = {'week': 0, 'month': 0, 'threeMonth': 0,
                        'currentYear': 0, 'year': 0, 'threeYears': 0};
 
 
-aStock = {'name': 'tmp', 'lastPrice': 0, 'lastPriceDate': 0, 'historicPrices': historicPrices,
+aStock = {'name': 'tmp', 'historicPrices': historicPrices,
         'lastDividend': 0, 'lastDividendDate': 0, 'lastDividendYield':0, 
         'historicDividend': historicDividend, 'performance': historicPerformance, 'appropriatePrice': 0};
 
@@ -37,7 +37,8 @@ content = [x.strip() for x in content]
 r = requests.get(content[0]).text
 #print (r.text)
 websiteAsText = bs(r,'lxml');
-stockName = 'todo';
+aStock['name'] = content[0].split("/",4)[3];
+# take the first element of content and split it 4 times according to "/" then take the 4th element [3]
 stockTable = websiteAsText.find('div',class_='abstand new');#use underscore because class is a keyword in python
 
 stockTableName = stockTable.find('div',class_='arheadgl new');#use underscore because class is a keyword in python
@@ -51,6 +52,7 @@ for td in stockTableHeader.find_all(['td',{'class': 'ql_hist_quote right'},'td',
     #print(StockTableHeaderData);
 ##check if the order of the data is still correct = tableheader
 #print('end++++++++++++++++++++++++header');
+################################################################historic values
 loopCounter = 1;
 for dataRows in stockTableTable.find_all(['tr',{'class': 'arrow0'}]):
     if loopCounter >1:#removing the header to not have it double int the library
@@ -81,8 +83,21 @@ for dataRows in stockTableTable.find_all(['tr',{'class': 'arrow0'}]):
             loopCounterNested=loopCounterNested+1;
     loopCounter = loopCounter + 1;
 
+################################################################historic dividend
+loopCounter = 1;
+dividendElement = websiteAsText.find('div',class_='histEventsBox abstand new');
+dividendTable = dividendElement.find('table',class_='line');
+for dataRows in dividendTable.find_all(['tr',{'class': 'arrow0'}]):
+    #print(dataRows);
+    loopCounterNested=1;
+    for data in dataRows.find_all(['tr',{'class='}]):
+        print(loopCounterNested)
+        loopCounterNested=loopCounterNested+1;
+    loopCounter = loopCounter + 1;
 
-wcsv('test.csv',aStock);
+################################################################historic performance
+
+wcsv(aStock['name'] + ".csv",aStock);
     
     #stockTableTableData = data.text;
     #print(stockTableTableData);
