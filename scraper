@@ -19,13 +19,12 @@ historicPrices = { 'date': [],	'open': [], 'high': [], 'low':[], 'close': [],
                 'tradedUnits':[], 'volume':[]};
 historicDividend = {'date': [],'dividend': [], 'yield':[]};
 
-historicPerformance = {'week': 0, 'month': 0, 'threeMonth': 0,
-                       'currentYear': 0, 'year': 0, 'threeYears': 0};
+historicPerformance = { 'date': [], 'euro': [], 'percent': []};
 
 
 aStock = {'name': 'tmp', 'historicPrices': historicPrices,
-        'lastDividend': 0, 'lastDividendDate': 0, 'lastDividendYield':0, 
-        'historicDividend': historicDividend, 'performance': historicPerformance, 'appropriatePrice': 0};
+        'historicDividend': historicDividend, 'historicPerformance': historicPerformance,
+        'appropriatePrice': 0};
 
 
 with open('links.txt') as f:
@@ -90,14 +89,49 @@ dividendTable = dividendElement.find('table',class_='line');
 for dataRows in dividendTable.find_all(['tr',{'class': 'arrow0'}]):
     #print(dataRows);
     loopCounterNested=1;
-    for data in dataRows.find_all(['tr',{'class='}]):
-        print(loopCounterNested)
+    for data in dataRows.find_all(['td',{'class='}]):
+        #you can also try to remove the \t \n manually
+        #result = data.replace('\n', '')
+        #result = data.replace('\t', '')
+        #print(data.get_text(strip=True))
+        if(loopCounterNested==1):
+            aStock['historicDividend']['date'].append(data.get_text(strip=True)); 
+        elif(loopCounterNested==4):
+            aStock['historicDividend']['dividend'].append(data.get_text(strip=True)); 
+        #elif(loopCounterNested==3):
+        #    aStock['historicDividend']['yield'].append(data.contents[0]); 
         loopCounterNested=loopCounterNested+1;
+    #print(loopCounter);
     loopCounter = loopCounter + 1;
 
 ################################################################historic performance
+loopCounter = 1;
+performanceElement = websiteAsText.find('div',class_='histPerformance abstand new');
+performanceTable = performanceElement.find('table',class_='line');
+for dataRows in performanceTable.find_all(['tr',{'class': 'arrow0'}]):
+    #print(dataRows);
+    loopCounterNested=1;
+    for data in dataRows.find_all(['td',{'class='}]):
+        #you can also try to remove the \t \n manually
+        #result = data.replace('\n', '')
+        #result = data.replace('\t', '')
+        #print(data.get_text(strip=True))
+            
+        if(loopCounterNested==1):  
+            aStock['historicPerformance']['date'].append(data.get_text(strip=True)); 
+        elif(loopCounterNested==2):
+            aStock['historicPerformance']['euro'].append(unicodedata.normalize("NFKD", data.contents[0])); 
+        elif(loopCounterNested==3):
+            aStock['historicPerformance']['percent'].append(data.get_text(strip=True)); 
+        #elif(loopCounterNested==3):
+        #    aStock['historicDividend']['yield'].append(data.contents[0]); 
+        loopCounterNested=loopCounterNested+1;
+    #print(loopCounter);
+    loopCounter = loopCounter + 1;
 
-wcsv(aStock['name'] + ".csv",aStock);
+################################################################invoke saving function
+wcsv(aStock['name'],aStock);
+#print(aStock)
     
     #stockTableTableData = data.text;
     #print(stockTableTableData);
