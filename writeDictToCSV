@@ -9,7 +9,7 @@ import csv
 import os
 
 def WriteDictToCSV(csv_file,dict_data):
-    
+##############################################################save the new data    
     #try to create the library archive
     try:
         os.mkdir("./library")
@@ -25,10 +25,10 @@ def WriteDictToCSV(csv_file,dict_data):
     #                   'currentYear', 'year', 'threeYears', 'appropriatePrice'];
     
     try:
-        with open('./library/'+ csv_file, 'w') as csvfile:
+        with open('./library/'+ csv_file + "__new.csv", 'w') as csvfile:
             wr = csv.writer(csvfile, dialect='excel')
             #wr.writerow(csv_header)
-            #wr.writerow(['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+            wr.writerow(['keyy', 'dataa'])
             for key in dict_data.keys():
 #                if keys=='historicPrices':
                 
