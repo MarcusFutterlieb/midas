@@ -63,15 +63,19 @@ for dataRows in stockTableTable.find_all(['tr',{'class': 'arrow0'}]):
             #print(unicodedata.normalize("NFKD", data.contents[0]));
             #print (loopCounterNested)
             if (loopCounterNested==2):
-                aStock['historicPrices']['open'].append(data.contents[0]); 
+                aStock['historicPrices']['open'].append(data.contents[0].strip()); 
             elif (loopCounterNested==3):
-                aStock['historicPrices']['high'].append(data.contents[0]);
+                aStock['historicPrices']['high'].append(data.contents[0].strip());
             elif (loopCounterNested==4):
-                aStock['historicPrices']['low'].append(unicodedata.normalize("NFKD", data.contents[0]));
+                aStock['historicPrices']['low'].append((data.contents[0]).strip());
+#                print('---'+(unicodedata.normalize("NFKD", data.contents[0]))+'---')
+#                print('---'+(data.contents[0])+'---')
+#                print('---'+(data.contents[0]).strip()+'---')
+#                print('-------------------------------------')
             elif (loopCounterNested==5):
-                aStock['historicPrices']['close'].append(data.contents[0]);
+                aStock['historicPrices']['close'].append(data.contents[0].strip());
             elif (loopCounterNested==7):
-                aStock['historicPrices']['tradedUnits'].append(data.contents[0]);
+                aStock['historicPrices']['tradedUnits'].append(data.contents[0].strip());
             elif (loopCounterNested==8):
                 aStock['historicPrices']['volume'].append(unicodedata.normalize("NFKD", data.contents[0]));
     #        else:
