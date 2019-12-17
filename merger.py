@@ -43,6 +43,7 @@ with open('library/bmw_vz-aktie__backup.csv', 'r') as t1, open('library/bmw_vz-a
                     newDateStr = line_new[0:len(line_new)-2] + ','+ line_old[dateStartPosition:-1];
                     wr.writerow([newDateStr]);
                     print('Could not find common date in files --> Has it been more than a month since you updated last?');
+                    additionalDates = 0;
                 else:
                     #print (postionInNew);
                     #build the new string
@@ -54,39 +55,63 @@ with open('library/bmw_vz-aktie__backup.csv', 'r') as t1, open('library/bmw_vz-a
                     #print(additionalDates);
         elif (cnt==(4*formatFactor)-1):    
             #should be the "open" key
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(5*formatFactor)-1):    
             #should be the "high" key
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(6*formatFactor)-1):    
             #should be the "low" key ##################
-            newDateStr = line_new[0:(additionalDates*9)-1-1] + line_old[dateStartPosition-1:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1-1] + line_old[dateStartPosition-1:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(7*formatFactor)-1):    
             #should be the "close" key
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(8*formatFactor)-1):    
             #should be the "tradeunits" key
             # find length of a element !!!Todo
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(9*formatFactor)-1):    
             #should be the "volume" key
             # find length of a element !!!Todo
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(10*formatFactor)-1):    
             #should be the "date" key
             # find last date for dividend that was equal in backup and new !!!Todo
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
         elif (cnt==(11*formatFactor)-1):    
             #should be the "dividend" key
             # possibly shift if there is a new dividend payment !!!Todo
-            newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            if (additionalDates!=0):
+                newDateStr = line_new[0:(additionalDates*9)-1] + line_old[dateStartPosition:-1];
+            else:
+                newDateStr = line_new[0:-1];
             wr.writerow([newDateStr]);
             
             
