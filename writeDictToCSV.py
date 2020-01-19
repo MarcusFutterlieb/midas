@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri 20 Sep 2019
-
 @author: Marcus Futterlieb
 """
 
 import csv
 import os
 
-def WriteDictToCSV(csv_file,dict_data):
+def writeDictToCSV(csv_file,dict_data):
 ##############################################################save the new data    
     #try to create the library archive
     try:
