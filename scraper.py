@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Sep 17 2019
-
 @author: Marcus Futterlieb
 """
 from bs4 import BeautifulSoup as bs;
-from WriteDictToCSV import WriteDictToCSV as wcsv;
+from writeDictToCSV import writeDictToCSV as wcsv;
 import requests;
 import os; #to have access to clear
 import time; #for now just to send my code to sleep
