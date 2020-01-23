@@ -20,6 +20,7 @@ from tkinter import ttk;
 
 from scraper import scraper;
 from merger import merger;
+from rowCount import rowCount;
 
 # set up the main window -->start
 top = tkinter.Tk();
@@ -45,6 +46,14 @@ testData = {'Interest_Rate': [5, 5.5, 6, 5.5, 5.25, 6.5, 7, 8, 7.5, 8.5],
             'Stock_Index_Price': [1500, 1520, 1525, 1523, 1515, 1540, 1545, 1560, 1555, 1565]
             };
 df3 = DataFrame(testData, columns=['Interest_Rate', 'Stock_Index_Price']);
+
+
+rows = rowCount('library/bmw_vz-aktie__merge.csv');
+with open('library/bmw_vz-aktie__merge.csv', 'r') as merge:
+    for cnt in range(1, rows):
+        #print(cnt);
+        line = merge.readline();
+        print(line.strip());
 
 
 figure3 = plt.Figure(figsize=(5,4), dpi=100)
