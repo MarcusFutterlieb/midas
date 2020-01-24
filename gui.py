@@ -20,7 +20,7 @@ from tkinter import ttk;
 
 from scraper import scraper;
 from merger import merger;
-from rowCount import rowCount;
+from littleHelper import rowCount;
 
 # set up the main window -->start
 top = tkinter.Tk();
