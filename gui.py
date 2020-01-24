@@ -47,13 +47,15 @@ testData = {'Interest_Rate': [5, 5.5, 6, 5.5, 5.25, 6.5, 7, 8, 7.5, 8.5],
             };
 df3 = DataFrame(testData, columns=['Interest_Rate', 'Stock_Index_Price']);
 
-
-rows = rowCount('library/bmw_vz-aktie__merge.csv');
-with open('library/bmw_vz-aktie__merge.csv', 'r') as merge:
-    for cnt in range(1, rows):
-        #print(cnt);
-        line = merge.readline();
-        print(line.strip());
+if (os.path.isdir("./library")):
+    print("test")
+#    rows = rowCount('library/bmw_vz-aktie__merge.csv');
+#    with open('library/bmw_vz-aktie__merge.csv', 'r') as merge:
+#        for cnt in range(1, rows):
+#            #print(cnt);
+#            line = merge.readline();
+#            #print(line.strip());
+            
 
 
 figure3 = plt.Figure(figsize=(5,4), dpi=100)
@@ -75,7 +77,7 @@ def scraperCallBack():
     scraper();
     print("GUI: executing scraper");
     #os.system('python merger.py')
-    merger();
+    merger("bmw_vz-aktie");
     print("GUI: executing merger");
 
 
