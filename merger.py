@@ -5,12 +5,14 @@ Created on Tue Dec 03 2019
 # compare to CSV files on scraped from the web and one from the library
 # TODO --> implement some kind of return that allows to check if merger has executed correctly
 # TODO --> merger is broken --> the count of additional dates does not seem to work and dates in general are not merged
+# TODO --> replace the rowcount with the function from little helper
 
 
 import csv;
 import math;
 import os;
 from shutil import copyfile as cp;
+import pandas;
 
 def merger(stock):
     additionalDates = 0;
@@ -44,12 +46,12 @@ def merger(stock):
                     wr.writerow([line_new.replace('"','')]);
             if (cnt == (3 * formatFactor) - 1):
                 lastDateBackup = line_old[dateStartPosition:16];
-                print ('line_old:  ',line_old)
+                #print ('line_old:  ',line_old)
                 # lastDateBackup is the most recent date out of the merge file
-                print('lastDateBackup: ',lastDateBackup, ' in stock: ', stock)
+                #print('lastDateBackup: ',lastDateBackup, ' in stock: ', stock)
                 # find the position of this date in the new file
                 postionInNew = line_new.find(lastDateBackup, dateStartPosition-2);
-                print('in the new string the most recent date that was also in backup was at position: ', postionInNew)
+                #print('in the new string the most recent date that was also in backup was at position: ', postionInNew)
                 #stringToParse.find(stringToFind,starting character)
                 #print ('postionInNew:   ',postionInNew,'        ','dateStartPosition:  ',dateStartPosition)
                 if (postionInNew != dateStartPosition):
@@ -158,3 +160,26 @@ def merger(stock):
             # print('******');
     print('Found ', additionalDates , ' additionalDates while parsing library for stock: ' , stock) ;
     print('---------');
+
+
+    ######################################try to achieve the same in pandas
+
+    if not (os.path.exists('library/' + stock + '__hist__merge.csv')):
+        # create the merge file in case this is the first time this particular stock is updated
+        print('merger: file is being updated for the first time --> setting up merge files')
+        cp("library/" + stock + "__hist__new.csv", "library/" + stock + "__hist__merge.csv");
+        cp("library/" + stock + "__divi__new.csv", "library/" + stock + "__divi__merge.csv");
+        cp("library/" + stock + "__perf__new.csv", "library/" + stock + "__perf__merge.csv");
+    else:
+        print('merger: there is an old file of this stock --> updating')
+        historicValues_new = pandas.read_csv('./library/' + stock + '__hist__new.csv')
+        historicValues_old = pandas.read_csv('./library/' + stock + '__hist__merge.csv')
+        latestDate_new = historicValues_new['stockDates'].iloc[0]
+        latestDate_old = historicValues_old['stockDates'].iloc[0]
+        if(latestDate_new==latestDate_old):
+            print('merger: update not necessary since the latest dates in both files are the same')
+        else:
+            print('merger: finding the position where merge and new had the same date')
+
+
+
