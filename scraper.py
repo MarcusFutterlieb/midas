@@ -35,16 +35,6 @@ def scraper():
     stockPerformanceCurrency = [];
     stockPerformancePercent = [];
 
-    historicPrices = {'date': [], 'open': [], 'high': [], 'low': [], 'close': [],
-                      'tradedUnits': [], 'volume': []};
-    historicDividend = {'date': [], 'dividend': [], 'yield': []};
-
-    historicPerformance = {'date': [], 'euro': [], 'percent': []};
-
-    aStock = {'name': 'tmp', 'historicPrices': historicPrices,
-              'historicDividend': historicDividend, 'historicPerformance': historicPerformance,
-              'appropriatePrice': 0};
-
     with open('links.txt') as f:
         content = f.readlines()
     # you may also want to remove whitespace characters like `\n` at the end of each line
@@ -55,7 +45,6 @@ def scraper():
     # print (r.text)
     websiteAsText = bs(r, 'lxml');
     stockName = content[0].split("/", 4)[3];
-    aStock['name'] = content[0].split("/", 4)[3];
     # take the first element of content and split it 4 times according to "/" then take the 4th element [3]
     stockTable = websiteAsText.find('div', class_='abstand new');  # use underscore because class is a keyword in python
 
@@ -79,7 +68,6 @@ def scraper():
             for data in dataRows.td:
                 # print('data: ',data);
                 stockDates.append(data);
-                aStock['historicPrices']['date'].append(data);
             loopCounterNested = 1;
             # print(dataRows.find_all(['td',{'class': 'font-size-14'}]))
             for data in dataRows.find_all(['td', {'class= font-size-14 right'}]):
@@ -88,26 +76,20 @@ def scraper():
                 if (loopCounterNested == 2):
                     stockOpen.append(data.contents[0].strip())
                     # print('data2: ', data.contents[0].strip());
-                    aStock['historicPrices']['open'].append(data.contents[0].strip());
                 elif (loopCounterNested == 3):
                     stockHigh.append(data.contents[0].strip())
-                    aStock['historicPrices']['high'].append(data.contents[0].strip());
                 elif (loopCounterNested == 4):
                     stockLow.append(data.contents[0].strip())
-                    aStock['historicPrices']['low'].append((data.contents[0]).strip());
                 #                print('---'+(unicodedata.normalize("NFKD", data.contents[0]))+'---')
                 #                print('---'+(data.contents[0])+'---')
                 #                print('---'+(data.contents[0]).strip()+'---')
                 #                print('-------------------------------------')
                 elif (loopCounterNested == 5):
                     stockClose.append(data.contents[0].strip())
-                    aStock['historicPrices']['close'].append(data.contents[0].strip());
                 elif (loopCounterNested == 7):
                     stockTradedUnits.append(data.contents[0].strip())
-                    aStock['historicPrices']['tradedUnits'].append(data.contents[0].strip());
                 elif (loopCounterNested == 8):
                     stockVolume.append(unicodedata.normalize("NFKD", data.contents[0]))
-                    aStock['historicPrices']['volume'].append(unicodedata.normalize("NFKD", data.contents[0]));
                 #        else:
                 #           print('do nothing');
                 # print(loopCounterNested)
@@ -130,10 +112,8 @@ def scraper():
             # print(data.get_text(strip=True))
             if (loopCounterNested == 1):
                 stockDivDate.append(data.get_text(strip=True));
-                aStock['historicDividend']['date'].append(data.get_text(strip=True));
             elif (loopCounterNested == 4):
                 stockDivValue.append(data.get_text(strip=True));
-                aStock['historicDividend']['dividend'].append(data.get_text(strip=True));
             elif (loopCounterNested == 3):
                 stockDivYield.append(data.get_text(strip=True));
             #    aStock['historicDividend']['yield'].append(data.contents[0]);
@@ -156,13 +136,10 @@ def scraper():
 
             if (loopCounterNested == 1):
                 stockPerformanceDate.append(data.get_text(strip=True));
-                aStock['historicPerformance']['date'].append(data.get_text(strip=True));
             elif (loopCounterNested == 2):
                 stockPerformanceCurrency.append(unicodedata.normalize("NFKD", data.contents[0]));
-                aStock['historicPerformance']['euro'].append(unicodedata.normalize("NFKD", data.contents[0]));
             elif (loopCounterNested == 3):
                 stockPerformancePercent.append(data.get_text(strip=True));
-                aStock['historicPerformance']['percent'].append(data.get_text(strip=True));
             # elif(loopCounterNested==3):
             #    aStock['historicDividend']['yield'].append(data.contents[0]);
             loopCounterNested = loopCounterNested + 1;
@@ -170,7 +147,7 @@ def scraper():
         loopCounter = loopCounter + 1;
 
     ################################################################invoke saving function
-    wcsv(aStock['name'] + "__new.csv", aStock);
+    #wcsv(aStock['name'] + "__new.csv", aStock);
     # print(aStock)
 
     # stockTableTableData = data.text;
