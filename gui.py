@@ -74,11 +74,12 @@ ax3.set_title('Interest Rate Vs. Stock Index Price')
 def scraperCallBack():
     messagebox.showinfo("Progress", "There should be a progress bar here")
     #os.system('python scraper.py');
-    scraper();
     print("GUI: executing scraper");
+    scraper();
     #os.system('python merger.py')
-    merger("bmw_vz-aktie");
     print("GUI: executing merger");
+    merger("bmw_vz-aktie");
+
 
 
 button_update = tkinter.Button(tab_options, text="Update", command=scraperCallBack)
