@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt;
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg;
 from matplotlib.figure import Figure
 from pandas import DataFrame;
+import pandas
 # from matplotlib.figure import Figure;
 
 from tkinter import messagebox;
@@ -25,7 +26,7 @@ from littleHelper import rowCount;
 # set up the main window -->start
 top = tkinter.Tk();
 top.title("Meedas - Securities Tracking");
-top.geometry("500x500");
+top.geometry("600x600");
 # set up the main window -->stop
 print("GUI: started");
 
@@ -42,31 +43,16 @@ tab_parent.pack(expand=1, fill='both');
 
 
 # adding figures and plots --> start
-testData = {'Interest_Rate': [5, 5.5, 6, 5.5, 5.25, 6.5, 7, 8, 7.5, 8.5],
-            'Stock_Index_Price': [1500, 1520, 1525, 1523, 1515, 1540, 1545, 1560, 1555, 1565]
-            };
-df3 = DataFrame(testData, columns=['Interest_Rate', 'Stock_Index_Price']);
-
 if (os.path.isdir("./library")):
-    print("test")
-#    rows = rowCount('library/bmw_vz-aktie__merge.csv');
-#    with open('library/bmw_vz-aktie__merge.csv', 'r') as merge:
-#        for cnt in range(1, rows):
-#            #print(cnt);
-#            line = merge.readline();
-#            #print(line.strip());
-            
-
-
-figure3 = plt.Figure(figsize=(5,4), dpi=100)
-ax3 = figure3.add_subplot(111)
-ax3.scatter(df3['Interest_Rate'], df3['Stock_Index_Price'], color='g')
-scatter3 = FigureCanvasTkAgg(figure3, tab_securities)
-scatter3.get_tk_widget().pack(side=tkinter.LEFT, fill=tkinter.BOTH)
-ax3.legend()
-ax3.set_xlabel('Interest Rate')
-ax3.set_title('Interest Rate Vs. Stock Index Price')
-
+    historicValues_new = pandas.read_csv('./library/' + 'bmw_vz-aktie' + '__hist__merge.csv')
+    figure3 = plt.Figure(figsize=(5, 4), dpi=100)
+    ax3 = figure3.add_subplot(111)
+    ax3.scatter(historicValues_new['stockDates'], historicValues_new['stockClose'], color='g')
+    scatter3 = FigureCanvasTkAgg(figure3, tab_securities)
+    scatter3.get_tk_widget().pack(side=tkinter.LEFT, fill=tkinter.BOTH)
+    ax3.legend()
+    ax3.set_xlabel('Dates')
+    ax3.set_title('bmw_vz-aktie')
 
 # adding figures and plots --> stop
 
@@ -74,28 +60,30 @@ ax3.set_title('Interest Rate Vs. Stock Index Price')
 def scraperCallBack():
     messagebox.showinfo("Progress", "There should be a progress bar here")
     #os.system('python scraper.py');
-    print("GUI: executing scraper");
-    scraper();
+    print("GUI: executing scraper")
+    stockList = scraper()
+    #print(stockList)
     #os.system('python merger.py')
-    print("GUI: executing merger");
-    merger("bmw_vz-aktie");
+    print("GUI: executing merger")
+    merger(stockList)
+    print("GUI: Update request finished")
 
 
 
 button_update = tkinter.Button(tab_options, text="Update", command=scraperCallBack)
-button_update.grid(row=0, column=0, padx=15, pady=15);
+button_update.grid(row=0, column=0, padx=15, pady=15)
 
 
 def helpCallBack():
     messagebox.showinfo("Help?", "Contact this guy at that address")
-    print("GUI: help button is executed");
+    print("GUI: help button is executed")
 
 
 button_help = tkinter.Button(tab_options, text="Help", command=helpCallBack)
-button_help.grid(row=0, column=1, padx=15, pady=15);
+button_help.grid(row=0, column=1, padx=15, pady=15)
 # set up buttons --> stop
 
 
 print("GUI: ready");
 top.mainloop()
-print("User closed GUI");
+print("User closed GUI")
