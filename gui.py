@@ -22,6 +22,7 @@ from tkinter import ttk
 from scraper import scraper
 from merger import merger
 from littleHelper import rowCount
+from littleHelper import overviewUpdate
 #from table import McListBox
 
 
@@ -43,9 +44,6 @@ tab_parent.add(tab_securities, text="Securities")
 tab_parent.pack(expand=1, fill='both')
 # set up available tabs -->stop
 
-# set up global variables --> start
-stockList = 0;
-# set up global variables --> stop
 
 
 # adding figures and plots --> start
@@ -68,13 +66,12 @@ if (os.path.isdir("./library")):
 
 # set up buttons --> start
 def scraperCallBack():
-    # os.system('python scraper.py');
     print("GUI: executing scraper")
     stockList = scraper()
-    # print(stockList)
-    # os.system('python merger.py')
     print("GUI: executing merger")
     merger(stockList)
+    print("GUI: executing overview update")
+    overviewUpdate(stockList)
     print("GUI: Update request finished")
     messagebox.showinfo("Progress", "Update finished")
 
@@ -97,9 +94,13 @@ def handle_tab_changed(event):
     selection = event.widget.select()
     tab = event.widget.tab(selection, "text")
     print("text:", tab)
+    stockList = 'tbd'
+    if (stockList != 0 and tab=="Overview"):
+        print("testsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+        listBox.insert("", "end", values=stockList)
 
 tab_parent.bind("<<NotebookTabChanged>>", handle_tab_changed)
-#set up the tab change handle -->start
+#set up the tab change handle -->stop
 
 # set up the overview tab --> start
 cols = ('Name', 'Price', 'Date')
@@ -108,12 +109,13 @@ for col in cols:
     listBox.heading(col, text=col)
 listBox.grid(row=1, column=0, columnspan=2)
 
-if not(stockList==0):
-    print("testsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-    listBox.insert("", "end", values=stockList)
 #for
 #    listBox.insert("", "end", values=(i, name, score))
-# set up the overview tab --> start
+
+
+# set up the overview tab --> stop
+
+
 print("GUI: ready")
 top.mainloop()
 print("User closed GUI")
