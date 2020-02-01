@@ -30,9 +30,10 @@ def merger(stockList):
             historicValues_old = pandas.read_csv('./library/' + stock + '__hist__merge.csv')
             latestDate_new = historicValues_new['stockDates'].iloc[0]
             latestDate_old = historicValues_old['stockDates'].iloc[0]
-
             if (latestDate_new == latestDate_old):
                 print('merger: update not necessary since the latest dates in both files are the same')
+                print('old latest date:  ', latestDate_old,
+                'new latest date:  ', latestDate_new)
             else:
                 print('merger: finding the position where merge and new had the same date')
                 for cnt in range(1, historicValues_old['stockDates'].size):
@@ -51,17 +52,21 @@ def merger(stockList):
                 else:
                     print('merger: a overlapping date was found, appending from: ',
                           historicValues_old['stockDates'].iloc[lastDateOverlap], ' at ', lastDateOverlap)
-                    historicValues_merge = historicValues_new.append(historicValues_old.iloc[lastDateOverlap + 1:-1])
+                    #print('size   ', len(historicValues_old['stockDates']))
+                    #print('data to be merged start', historicValues_new)
+                    maxLengthOld = len(historicValues_old['stockDates'])
+                    historicValues_merge = historicValues_new.append(historicValues_old.iloc[lastDateOverlap + 1:maxLengthOld])
+                    #print('data to be merged result', historicValues_merge)
 
                 df1 = DataFrame(historicValues_merge,
                                 columns=['stockDates', 'stockOpen', 'stockHigh', 'stockLow', 'stockClose',
                                          'stockTradedUnits', 'stockVolume'])
                 export_csv1 = df1.to_csv(r'./library/' + stock + '__hist__merge.csv', index=None, header=True)
-                print('merger: finished updating: ', stock, ' info')
+                print('merger: finished updating: ', stock, ' historic data')
 
         # remove uneccesary files
         os.remove('./library/' + stock + '__hist__new.csv')
         os.remove('./library/' + stock + '__divi__new.csv')
         os.remove('./library/' + stock + '__perf__new.csv')
-        print('merger: removed unnecessrary files')
+        print('merger: removed unnecessary files')
 
